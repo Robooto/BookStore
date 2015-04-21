@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookStore.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -19,6 +20,12 @@ namespace BookStore
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Filters.Add(new EnforceHttpsAttribute());
+
+            config.MessageHandlers.Add(new BasicAuthenticationHandler(new CustomPrincipalProvider()));
+
+            config.Filters.Add(new System.Web.Http.AuthorizeAttribute());
         }
     }
 }
