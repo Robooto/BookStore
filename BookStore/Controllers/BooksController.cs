@@ -2,6 +2,7 @@
 using BookStore.Contracts;
 using BookStore.Datastores;
 using BookStore.DataTransferObjects;
+using BookStore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,12 @@ namespace BookStore.Controllers
     {
         private IUnitOfWork unit;
 
-        public BooksController()
+        public BooksController(IUnitOfWork unit)
         {
-            this.unit = new SampleDataStore();
+            this.unit = unit;
         }
 
+        [Queryable]
         public IHttpActionResult Get()
         {
             var books = unit.Books.All;
@@ -29,6 +31,7 @@ namespace BookStore.Controllers
             return Ok(response);
         }
 
+        [Queryable]
         public IHttpActionResult Get(string query)
         {
             var results = unit.Books.Search(query);
@@ -43,6 +46,7 @@ namespace BookStore.Controllers
             return Ok(response);
         }
 
+        [CheckNulls]
         public IHttpActionResult Get(int id)
         {
             var result = unit.Books.GetOne(id);
